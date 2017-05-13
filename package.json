@@ -4,6 +4,7 @@
   "description": "A bot for CoderDojo Discord",
   "main": "bot.js",
   "dependencies": {
+    "config.json": "0.0.4",
     "discord.js": "^11.1.0"
   }
 }
