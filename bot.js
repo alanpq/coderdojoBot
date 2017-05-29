@@ -16,6 +16,7 @@ client.on('ready', () => {
 client.on('message', msg => {
   var pl = players[msg.author.id];
   if(pl != undefined && pl.channel == msg.channel) {
+    var next = true;
     switch(pl.state) {
       case 0: //has answered Q1
         if(/[y|Y]|[y|Y][e|E][s|S]/.test(msg.content)) {
@@ -27,20 +28,21 @@ client.on('message', msg => {
           pl.channel.send("Alright!");
           pl.member.addRole(roles.ninja);
         } else {
-          pl.channel.send("That wasn't a valid response.");
-          pl.channel.send("Please answer with \"yes\" or \"no\"");
+          pl.channel.send("That wasn't a valid response.\nPlease answer with \"yes\" or \"no\"");
+          next = false;
+          //pl.channel.send("");
         }
       break;
     }
-    if(pl.state < questions.length-1) {
-      pl.state++;
-      pl.channel.send(questions[pl.state]);
-    }
-    else {
-      pl.channel.send("Thank you for you patience, and welcome to the CoderDojo Discord!");
-      pl.channel.send("Please make sure to read the rules (#rules) first, and most of all - have fun!");
+    if(next) {
+      if(pl.state < questions.length-1) {
+        pl.state++;
+        pl.channel.send(questions[pl.state]);
+      } else {
+        pl.channel.send("Thank you for you patience, and welcome to the CoderDojo Discord!\nPlease make sure to read the rules (#rules) first, and most of all - have fun!");
 
-      pl.member.guild.defaultChannel.send(`Please welcome ${pl.member} to the server!`);
+        pl.member.guild.defaultChannel.send(`Please welcome ${pl.member} to the server!`);
+      }
     }
   }
 });
@@ -58,8 +60,7 @@ client.on('guildMemberAdd', member => {
   var promise = member.createDM();
   promise.then((dmChannel) => {
     players[dmChannel.recipient.id] = {state:0, channel:dmChannel, member:member};
-    dmChannel.send(`Hello ${member}! Before you can join the CoderDojo Discord, we'd like you to answer some questions:`);
-    dmChannel.send(questions[players[dmChannel.recipient.id].state]);
+    dmChannel.send(`Hello ${member}! Before you can join the CoderDojo Discord, we'd like you to answer some questions:\n${questions[players[dmChannel.recipient.id].state]}`);
   })
 
 
