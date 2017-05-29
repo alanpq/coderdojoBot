@@ -39,6 +39,8 @@ client.on('message', msg => {
     else {
       pl.channel.send("Thank you for you patience, and welcome to the CoderDojo Discord!");
       pl.channel.send("Please make sure to read the rules (#rules) first, and most of all - have fun!");
+
+      pl.member.guild.defaultChannel.send(`Please welcome ${pl.member} to the server!`);
     }
   }
 });
@@ -60,8 +62,7 @@ client.on('guildMemberAdd', member => {
     dmChannel.send(questions[players[dmChannel.recipient.id].state]);
   })
 
-  member.guild.defaultChannel.send(`Welcome to the server, ${member}!`);
-  member.guild.defaultChannel.send(`Please check your DMs for info.`);
+
 
   const channel = member.guild.channels.find('name', 'member-log');
   if (!channel) return;
