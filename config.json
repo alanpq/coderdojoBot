@@ -1,4 +1,24 @@
 {
+  "cmdPrefix": "!",
+  "logChannel": "bot-log",
+  "warnChannel": "bot-log",
+  "errorChannel": "bot-error",
+  
+  "pgChannels": [
+    "general",
+    "code",
+    "show-and-tell",
+    "game-dev",
+    "ibm",
+    "bank-of-ireland",
+    "torytop",
+    "feedback",
+    "voice",
+    "memes",
+    "bot-log",
+    "bot-error"
+  ],
+  
   "swears": {
     "fuck": "heck",
     "fucking": "hecking",
