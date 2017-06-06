@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 exports.run = (client, config, msg) => {
-  if(!config.pgChannels.includes(msg.channel.name)) return;
+  if(!config.pgChannels.includes(msg.channel.name) || msg.author.bot) return;
   
   var swears = Object.keys(config.swears);
   var final = msg.content;
@@ -15,6 +15,7 @@ exports.run = (client, config, msg) => {
       .setDescription(final)
       .setTimestamp(Date.parse(msg.timestamp))
     });
+    
     msg.delete();
   }
 }

@@ -1,5 +1,5 @@
 {
-  "cmdPrefix": "!",
+  "cmdPrefix": "/",
   "logChannel": "bot-log",
   "warnChannel": "bot-log",
   "errorChannel": "bot-error",

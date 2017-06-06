@@ -1,8 +1,13 @@
-exports.run = (client, message, args) => {
-  console.log(args);
-  console.log(args.length);
+exports.run = (client, message, config, args) => {
   if(!args || args.length < 1) return message.reply("Must provide a command name to reload.");
-  // the path is relative to the *current folder*, so just ./filename.js
-  delete require.cache[require.resolve(`./${args[0]}.js`)];
-  message.reply(`The command ${args[0]} has been reloaded`);
+  
+  var resolved;
+  try {
+    resolved = require.resolve(`./${args[0]}.js`)
+  } catch (err) {
+    return message.reply("The command `" + args[0] + "` does not exist!")
+  }
+  
+  delete require.cache[resolved];
+  message.reply(`The command \`${args[0]}\` has been reloaded`);
 };

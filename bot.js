@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
+const _ = require("underscore");
 
 
 var args = process.argv.slice(2);
@@ -13,7 +14,22 @@ var roles = {};
 
 //////////////////////////////////////////begin modularisation///////////////////////////////////////////////
 
-const config = require("./config.json");
+const readJSON = (path, cb) => {
+  fs.readFile(require.resolve(path), (err, data) => {
+    if (err)
+      cb(err)
+    else {
+      cb(null, JSON.parse(data))
+    }
+  })
+}
+
+
+var config = {};
+
+readJSON("./config.json", (err, json) => {config = json});
+//readJSON("./data/timezones.json", (err, json) => {config._timezones = json});
+
 
 var _channel; //global channel (since this bot is only for the CoderDojo channel)
 var log, warn, error;
@@ -24,7 +40,7 @@ const _warn = console.warn;
 const _error = console.error;
 
 console.log = function(options, msg) {
-  if(typeof options == "object")
+  if(typeof options == "object" && arguments.length > 1)
     Array.prototype.shift.call(arguments);
   else
     msg = options;
@@ -37,13 +53,13 @@ console.log = function(options, msg) {
     .setColor(0x00AE86)
     .setDescription(msg)
     //adds thumbnail if there is a user in question
-    .setThumbnail((options.user) ? options.user.avatarURL : "")
+    .setThumbnail((options && options.user) ? options.user.avatarURL : "")
     .setTimestamp()
   });
 }
 
 console.warn = function(options, msg) {
-  if(typeof options == "object")
+  if(typeof options == "object" && arguments.length > 1)
     Array.prototype.shift.call(arguments);
   else
     msg = options;
@@ -62,11 +78,10 @@ console.warn = function(options, msg) {
 }
 
 console.error = function(options, msg) {
-  if(typeof options == "object")
+  if(typeof options == "object" && arguments.length > 1)
     Array.prototype.shift.call(arguments);
   else
     msg = options;
-  
   _error.apply(this, arguments);
   if(!warn) return;
   error.send({embed: new Discord.RichEmbed()
@@ -104,18 +119,20 @@ client.on("message", message => {
   
   //SANITISE!
   if(/[(\/)(\.)]/.test(command)) {
-    console.warn({user: message.author}, message.author + " (" + message.author.username + ") tried to load js outside of commands folder!")
-    message.channel.send(message.author + ", naughty!");
+    //console.warn({user: message.author}, message.author + " (" + message.author.username + ") tried to load js outside of commands folder!")
+    //message.channel.send(message.author + ", naughty!");
     message.delete();
     return;
   }
   
   try {
     let commandFile = require(`./commands/${command}.js`);
-    commandFile.run(client, message, args);
-  } catch (err) {
-    console.error(err);
-  }
+    let options = commandFile.options;
+    _.defaults(options, {requireMod: false});
+    if(!message.member.roles.has("280109873105076235") && options.requireMod) return message.reply("You have insufficient permissions to run `"+ command +"`.")
+    
+    commandFile.run(client, message, config, args);
+  } catch (err) {}
 });
 
 
