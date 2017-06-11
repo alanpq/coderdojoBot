@@ -5,7 +5,7 @@ exports.run = (client, config, messageReaction, user) => {
     var message = messageReaction.message;
     var channel = message.guild.channels.find("name", config.starboard.channel);
     var embed = new Discord.RichEmbed()
-      .setTitle(messageReaction.count + " " + messageReaction.emoji + " " + message.channel + " (ID: " + message.id + ")")
+      .setTitle(messageReaction.count + " " + messageReaction.emoji + " #" + message.channel.name + " (ID: " + message.id + ")")
       .setDescription(message.content)
       .setAuthor(message.author.username, message.author.avatarURL)
       .setTimestamp(message.createdAt);
