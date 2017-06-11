@@ -19,6 +19,13 @@
     "bot-error"
   ],
   
+  "starboard": {
+    "emojiID": "280070625928675329",
+    "reactQuota": 3,
+    "channel": "starboard",
+    "channelDesc": "Server highlights. Messages with {x} or more upvotes live here"
+  },
+  
   "swears": {
     "fuck": "heck",
     "cunt": "meanboye",

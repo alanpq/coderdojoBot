@@ -147,6 +147,7 @@ client.on('ready', () => {
   log = _channel.channels.find('name', config.logChannel);
   warn = _channel.channels.find('name', config.warnChannel);
   error = _channel.channels.find('name', config.errorChannel);
+  _channel.channels.find('name', config.starboard.channel).setTopic(config.starboard.channelDesc.replace("{x}", config.starboard.reactQuota));
 });
 
 client.on('message', msg => {
