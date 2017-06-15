@@ -121,7 +121,7 @@ client.on("message", message => {
   if(/[(\/)(\.)]/.test(command)) {
     //console.warn({user: message.author}, message.author + " (" + message.author.username + ") tried to load js outside of commands folder!")
     //message.channel.send(message.author + ", naughty!");
-    message.delete();
+    //message.delete();
     return;
   }
   
