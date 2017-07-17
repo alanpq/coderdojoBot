@@ -150,39 +150,7 @@ client.on('ready', () => {
   _channel.channels.find('name', config.starboard.channel).setTopic(config.starboard.channelDesc.replace("{x}", config.starboard.reactQuota));
 });
 
-client.on('message', msg => {
-  var pl = players[msg.author.id];
-  if(pl != undefined && pl.channel == msg.channel) {
-    var next = true;
-    switch(pl.state) {
-      case 0: //has answered Q1
-        if(/[y|Y]|[y|Y][e|E][s|S]/.test(msg.content)) {
-          pl.channel.send("Alright!");
-          pl.member.addRole(roles.over13);
-          pl.member.addRole(roles.ninja);
 
-        } else if (/[n|N]|[n|N][o|O]/.test(msg.content)){
-          pl.channel.send("Alright!");
-          pl.member.addRole(roles.ninja);
-        } else {
-          pl.channel.send('That wasn\'t a valid response.\nPlease answer with "yes" or "no"');
-          next = false;
-          //pl.channel.send("");
-        }
-      break;
-    }
-    if(next) {
-      if(pl.state < questions.length-1) {
-        pl.state++;
-        pl.channel.send(questions[pl.state]);
-      } else {
-        pl.channel.send("Thank you for you patience, and welcome to the CoderDojo Discord!\nPlease make sure to read the rules (#rules) first, and most of all - have fun!");
-
-        pl.member.guild.defaultChannel.send(`Please welcome ${pl.member} to the server!`);
-      }
-    }
-  }
-});
 
 var players = {};
 
