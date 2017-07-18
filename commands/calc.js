@@ -5,16 +5,13 @@ mathjs.createUnit('dankmeme', {definition: '1000 megameme', prefixes: 'binary_lo
 //mathjs.createUnit('dank');
 
 var parsers = {};
-exports.run = (client, message, config, args) => {
+exports.run = (client, message, data, configs, args) => {
   if(message.author.bot) return;
   if(!parsers[message.author.id]) {
     parsers[message.author.id] = mathjs.parser();
   }
-  
+
   var ret = parsers[message.author.id].eval(args.join(" "));
   if(ret && (ret + "").length > 0)
     message.channel.send(ret + "");
 }
-
-exports.help = `Provides a 
-test`;

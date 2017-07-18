@@ -1,5 +1,5 @@
 var Discord = require("discord.js")
-exports.run = (client, config, messageReaction, user) => {
+exports.run = (client, data, configs, messageReaction, user) => {
   if(messageReaction.emoji.id != config.starboard.emojiID || messageReaction.message.author.bot) return;
   if(messageReaction.count >= config.starboard.reactQuota) {
     var message = messageReaction.message;

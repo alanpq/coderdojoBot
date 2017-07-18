@@ -3,7 +3,7 @@
   "logChannel": "bot-log",
   "warnChannel": "bot-log",
   "errorChannel": "bot-error",
-  
+
   "pgChannels": [
     "general",
     "code",
@@ -18,27 +18,27 @@
     "bot-log",
     "bot-error"
   ],
-  
+
   "starboard": {
     "emojiID": "280070625928675329",
     "reactQuota": 3,
     "channel": "starboard",
     "channelDesc": "Server highlights. Messages with {x} or more upvotes live here"
   },
-  
+
   "swears": {
     "fuck": "heck",
     "cunt": "meanboye",
     "faggot": "individual",
     "fidget spinner": "unspoken evil",
     "shit": "dire",
-    "damn": "dang",    
+    "damn": "dang",
     "crap": "cuttlefish",
     "bitch": "dog who was born with and retained 2 x chromosomes, making them \"female\" in the English language according to current social norms",
-    "crap": "crud", 
-    "dick": "body part", 
-    "vagina": "handwarmer", 
-    "cock": "body part", 
+    "crap": "crud",
+    "dick": "body part",
+    "vagina": "handwarmer",
+    "cock": "body part",
     "pussy": "kitty",
     "holy shit": "holy heck specks",
     "hitler": "führer",

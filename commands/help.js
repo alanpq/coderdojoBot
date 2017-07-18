@@ -35,12 +35,12 @@ var saveJSON = (json, path, cb) => {
   })
 }
 
-exports.run = (client, message, config, args) => {
+exports.run = (client, message, data, configs, args) => {
   if(/[(\/)(\.)]/.test(args[0])) {
     message.delete();
     return;
   }
-  
+
   if(args[0] == "edit" && args[1] && args[2]) {
     try {
       let resolved = require.resolve(`./${args[1]}.js`);
@@ -60,14 +60,14 @@ exports.run = (client, message, config, args) => {
     var cmd = "help";
     var noHelp = `No help was found! Did you type it correctly?
   If you're sure, please contact a @Moderator.`;
-    /*var noHelp = 
+    /*var noHelp =
         `No help was found! Did you type it correctly?
   If you're sure, please contact a @Moderator.`;*/
 
     if(args.length > 0 && helps != undefined){
       cmd = args[0];
     }
-    
+
     if(cmd == "help") {
       var string = "The following commands are available:";
       var cmds = Object.keys(helps);

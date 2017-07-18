@@ -5,7 +5,7 @@ function randomRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-exports.run = (client, message, config, args) => {
+exports.run = (client, message, data, configs, args) => {
   var text        = args[0];
   var duration    = parseInt(args[1], 10) * 1000;
   

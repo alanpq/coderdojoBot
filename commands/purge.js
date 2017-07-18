@@ -10,7 +10,7 @@ function removeMSGS(channel) {
 
 exports.options = {requireMod: true};
 
-exports.run = (client, message, config, args) => {
+exports.run = (client, message, data, configs, args) => {
   ///280109873105076235 is moderator role
   if(message.author.bot) return;
   

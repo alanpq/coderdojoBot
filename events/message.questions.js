@@ -1,4 +1,14 @@
-client.on('message', msg => {
+
+var players = {};
+
+var questions = [
+  `Are you over the age of 13? (y/n):`
+];
+//Players have states depending on what question they are on (assuming there are multiple)
+//0 - Are you over 13?
+//If a player is not found in this list, they have answered the questions.
+
+exports.run = (client, data, configs, msg) => {
   var pl = players[msg.author.id];
   if(pl != undefined && pl.channel == msg.channel) {
     var next = true;
@@ -30,4 +40,4 @@ client.on('message', msg => {
       }
     }
   }
-});
+}

@@ -5,7 +5,7 @@ var polls = {};
 
 var emoj = [":zero:", "1⃣", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 
-exports.run = (client, message, config, args) => {
+exports.run = (client, message, data, configs, args) => {
   //title, description, options....
   if(args.length < 2) return message.reply("Insufficient arguments.");
   var title = args[0];

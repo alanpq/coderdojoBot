@@ -24,11 +24,27 @@ const readJSON = (path, cb) => {
   })
 }
 
+const saveJSON = (json, path, cb) => {
+  fs.writeFile(path, JSON.stringify(json), (err) => {
+    if(cb) cb(err);
+    else if(err) console.error(err);
+  })
+}
 
-var config = {};
+const saveJSONSync = (json, path, cb) => {
+  fs.writeFileSync(path, JSON.stringify(json));
+}
 
-readJSON("./config.json", (err, json) => {config = json});
-//readJSON("./data/timezones.json", (err, json) => {config._timezones = json});
+
+var data = {};
+var configs = {};
+
+var mainCFG = {};
+var timezonesDAT, xpDAT = {};
+
+readJSON("./config.json", (err, json) => {configs["main"] = json});
+readJSON("./data/xp.json", (err, json) => {data["xp"] = json});
+readJSON("./data/timezones.json", (err, json) => {data["timezones"] = json});
 
 
 var _channel; //global channel (since this bot is only for the CoderDojo channel)
@@ -44,7 +60,7 @@ console.log = function(options, msg) {
     Array.prototype.shift.call(arguments);
   else
     msg = options;
-  
+
   _log.apply(this, arguments);
   if(!log) return;
   log.send({embed: new Discord.RichEmbed()
@@ -63,7 +79,7 @@ console.warn = function(options, msg) {
     Array.prototype.shift.call(arguments);
   else
     msg = options;
-  
+
   _warn.apply(this, arguments);
   if(!warn) return;
   warn.send({embed: new Discord.RichEmbed()
@@ -104,19 +120,19 @@ fs.readdir("./events/", (err, files) => {
   files.forEach(file => {
     let eventFunction = require(`./events/${file}`);
     let eventName = file.split(".")[0];
-    
-    client.on(eventName, (...args) => eventFunction.run(client, config, ...args));
+
+    client.on(eventName, (...args) => eventFunction.run(client, data, configs, ...args));
   });
 });
 
 //dynamic command system by attempting to load js file matching client message
 client.on("message", message => {
   if (message.author.bot) return;
-  if (!message.content.startsWith(config.cmdPrefix)) return;
+  if (!message.content.startsWith(configs.main.cmdPrefix)) return;
 
   const args = message.content.split(" ");
-  const command = args.shift().slice(config.cmdPrefix.length);
-  
+  const command = args.shift().slice(configs.main.cmdPrefix.length);
+
   //SANITISE!
   if(/[(\/)(\.)]/.test(command)) {
     //console.warn({user: message.author}, message.author + " (" + message.author.username + ") tried to load js outside of commands folder!")
@@ -124,14 +140,14 @@ client.on("message", message => {
     //message.delete();
     return;
   }
-  
+
   try {
     let commandFile = require(`./commands/${command}.js`);
     let options = commandFile.options;
     _.defaults(options, {requireMod: false});
     if(!message.member.roles.has("280109873105076235") && options.requireMod) return message.reply("You have insufficient permissions to run `"+ command +"`.")
-    
-    commandFile.run(client, message, config, args);
+
+    commandFile.run(client, message, data, configs, args);
   } catch (err) {}
 });
 
@@ -142,24 +158,17 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.username}!`);
   roles.ninja = client.guilds.first().roles.find('name', 'Ninjas');
   roles.over13 = client.guilds.first().roles.find('name', 'Over 13');
-  
+
   _channel = client.guilds.first();
-  log = _channel.channels.find('name', config.logChannel);
-  warn = _channel.channels.find('name', config.warnChannel);
-  error = _channel.channels.find('name', config.errorChannel);
-  _channel.channels.find('name', config.starboard.channel).setTopic(config.starboard.channelDesc.replace("{x}", config.starboard.reactQuota));
+  log = _channel.channels.find('name', configs.main.logChannel);
+  warn = _channel.channels.find('name', configs.main.warnChannel);
+  error = _channel.channels.find('name', configs.main.errorChannel);
+  _channel.channels.find('name', configs.main.starboard.channel).setTopic(configs.main.starboard.channelDesc.replace("{x}", configs.main.starboard.reactQuota));
 });
 
 
 
-var players = {};
 
-var questions = [
-  `Are you over the age of 13? (y/n):`
-];
-//Players have states depending on what question they are on (assuming there are multiple)
-//0 - Are you over 13?
-//If a player is not found in this list, they have answered the questions.
 
 client.on('guildMemberAdd', member => {
   var promise = member.createDM();
@@ -175,5 +184,24 @@ client.on('guildMemberAdd', member => {
   channel.send(`Welcome to the server, ${member}`);
 });
 
-
 client.login(token);
+
+process.stdin.resume();//so the program will not close instantly
+
+function exitHandler(options, err) { //synchronous operations only
+    console.log('Cleaning up..');
+    client.destroy();
+    saveJSONSync(data.xp, "./data/xp.json");
+    saveJSONSync(data.timezones, "./data/timezones.json");
+    if (err) console.log(err.stack);
+    if (options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));

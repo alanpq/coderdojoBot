@@ -1,7 +1,7 @@
 
 exports.options = {reqiureMod:true};
 
-exports.run = (client, message, config, args) => {
+exports.run = (client, message, data, configs, args) => {
   if(!args || args.length < 1) return message.reply("Must provide a command name to reload.");
   
   var resolved;
